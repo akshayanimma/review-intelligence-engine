@@ -142,14 +142,6 @@ review-intelligence-engine/
 
 ---
 
-## 🔭 Possible next steps
-
-- Add screenshots or a short GIF of the dashboard to this README
-- Extend root-cause tagging beyond keyword rules, for example with a trained text classifier
-- Add evaluation metrics for the tagging step against a hand-labelled sample
-
----
-
 ## 👩‍💻 Author
 
 **Akshaya Nimma** · B.Sc. Computer Science and Machine Learning
