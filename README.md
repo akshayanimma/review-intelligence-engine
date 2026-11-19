@@ -1,93 +1,165 @@
+<div align="center">
 
-# Customer Support & Review Intelligence Engine
+# 🔍 Review Intelligence Engine
 
-An end-to-end Data Analytics, NLP, and Business Intelligence pipeline built to ingest, clean, tag, store, and visualize customer reviews (Swiggy Google Play Store dataset) to uncover critical root causes of customer dissatisfaction and churn risk.
+**An end-to-end Data Analytics, NLP and BI pipeline that turns raw app-store reviews into root-cause insights and churn-risk signals.**
 
-**Live Dashboard:** ` https://review-intelligence-engine-kdzbheceffq8wocprpchaf.streamlit.app/` 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://review-intelligence-engine-kdzbheceffq8wocprpchaf.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](#-tech-stack)
+[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](#-tech-stack)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](#-tech-stack)
+[![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](#-tech-stack)
 
-## Business Problem & Objective
-Customer feedback on app stores contains high-signal operational issues—such as delivery delays, food quality or pricing concerns, payment and refund friction, and app bugs—that are difficult to track manually at scale. This project builds a pipeline and interactive dashboard to:
-* Quantify customer sentiment using VADER sentiment analysis (`nltk`).
-* Categorize reviews into actionable business root causes.
-* Highlight high-risk complaints and trends over time to support data-driven decisions.
+[**🚀 Try the live dashboard**](https://review-intelligence-engine-kdzbheceffq8wocprpchaf.streamlit.app/) · [Pipeline](#-how-it-works) · [Quick start](#-quick-start) · [Project structure](#-project-structure)
 
-## Pipeline Architecture
-```text
-Google Play Store Reviews (raw_reviews.csv)
-        │
-        ▼
-1. Data Ingestion (fetch_reviews.py)
-        │
-        ▼
-2. Cleaning & NLP Tagging (clean_and_tag.py) ──► clean_reviews.csv
-        │
-        ▼
-3. SQLite Storage & Analysis (analyze_data.py) ──► review_engine.db
-        │
-        ▼
-4. Interactive BI Dashboard (app.py)
+</div>
+
+---
+
+## 📌 Overview
+
+App-store reviews are full of signal, but reading thousands of them by hand doesn't scale. This project ingests **Swiggy Google Play Store reviews**, cleans and tags them with NLP, stores them in a SQL database, and surfaces the results in an interactive dashboard.
+
+The goal is to answer practical business questions:
+
+- 😡 **What are customers unhappy about?** (delivery, food quality, payments, app performance, ...)
+- 📉 **Which issues carry the most churn risk?**
+- 📆 **How is sentiment trending over time?**
+
+> **Dataset:** 4,300+ Google Play Store reviews.
+
+---
+
+## ✨ Features
+
+| | Feature | What it gives you |
+|---|---|---|
+| 📥 | **Automated ingestion** | Pulls reviews into a raw CSV with a single script |
+| 🧹 | **Text cleaning** | Normalizes review text before analysis |
+| 💬 | **Sentiment analysis** | VADER classifies each review as Positive, Neutral or Negative |
+| 🏷️ | **Root-cause tagging** | Maps reviews to categories like Delivery, Food Quality, Payments and App Performance |
+| 🗄️ | **SQL analysis** | SQLite queries for root-cause volume, star ratings and churn-risk indicators |
+| 📊 | **Interactive dashboard** | Streamlit + Plotly app with sidebar filters, KPI cards, charts and daily trends |
+| 🔎 | **Review explorer** | Sortable table of individual reviews |
+| ⬇️ | **Filtered export** | Download the filtered view as CSV |
+
+---
+
+## 🧭 How it works
+
+```mermaid
+flowchart LR
+    A["📥 fetch_reviews.py<br/>Collect reviews"] --> B["raw_reviews.csv"]
+    B --> C["🧹 clean_and_tag.py<br/>Clean + VADER sentiment<br/>+ root-cause tagging"]
+    C --> D["cleaned_reviews.csv"]
+    D --> E["🗄️ analyze_data.py<br/>Load into SQLite + SQL queries"]
+    E --> F[("review_engine.db")]
+    F --> G["📊 app.py<br/>Streamlit dashboard"]
+    D --> G
 ```
 
-1. **Data Ingestion (`fetch_reviews.py`)**: Collects Google Play Store reviews and saves the raw dataset to `raw_reviews.csv`.
-2. **Cleaning & NLP Tagging (`clean_and_tag.py`)**: Cleans text entries, runs VADER sentiment analysis to classify reviews (*Positive*, *Neutral*, *Negative*), maps feedback to business root causes (*Delivery*, *Food Quality*, *Payments*, *App Performance*, etc.), and outputs `clean_reviews.csv`.
-3. **Database Storage & SQL Analysis (`analyze_data.py`)**: Loads processed records into `review_engine.db` (SQLite) and runs SQL queries to analyze root-cause volume, star ratings, and churn-risk indicators.
-4. **Interactive BI Dashboard (`app.py`)**: Provides a Streamlit and Plotly dashboard with sidebar filters (root cause, sentiment, star rating, keyword search), KPI summary cards, sentiment and root-cause charts, daily trend views, a sortable review explorer, and filtered CSV export.
+<details>
+<summary><b>1️⃣ Ingestion</b> · <code>fetch_reviews.py</code></summary>
+<br>
+Collects Swiggy Google Play Store reviews and saves them to <code>raw_reviews.csv</code>.
+</details>
 
-## Tech Stack
-* **Programming & Data Manipulation**: Python, Pandas
-* **Database & Querying**: SQLite (`sqlite3`)
-* **NLP**: NLTK (VADER Sentiment Analysis)
-* **Visualization & Web App**: Streamlit, Plotly Express
-* **Version Control**: Git, GitHub
+<details>
+<summary><b>2️⃣ Cleaning and NLP tagging</b> · <code>clean_and_tag.py</code></summary>
+<br>
+Cleans the review text, scores sentiment with <b>VADER</b> (Positive / Neutral / Negative), and maps each review to a root cause such as Delivery, Food Quality, Payments or App Performance. Output goes to <code>cleaned_reviews.csv</code>.
+</details>
 
-## Project Structure
-```text
+<details>
+<summary><b>3️⃣ Storage and SQL analysis</b> · <code>analyze_data.py</code></summary>
+<br>
+Loads the tagged records into a SQLite database (<code>review_engine.db</code>) and runs queries on root-cause volume, star ratings and churn-risk indicators.
+</details>
+
+<details>
+<summary><b>4️⃣ Dashboard</b> · <code>app.py</code></summary>
+<br>
+A Streamlit + Plotly app with sidebar filters, KPI cards, charts, daily trends, a sortable review explorer and filtered CSV export.
+</details>
+
+---
+
+## 🛠️ Tech stack
+
+| Area | Tools |
+|---|---|
+| Language | Python |
+| Data handling | Pandas |
+| Database | SQLite (`sqlite3`) |
+| NLP | NLTK (VADER sentiment) |
+| Visualization | Plotly Express |
+| App framework | Streamlit |
+| Version control | Git, GitHub |
+
+---
+
+## ⚡ Quick start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/akshayanimma/review-intelligence-engine.git
+cd review-intelligence-engine
+
+# 2. Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the pipeline (in order)
+python fetch_reviews.py         # collect reviews -> raw_reviews.csv
+python clean_and_tag.py         # clean + tag     -> cleaned_reviews.csv
+python analyze_data.py          # load + query    -> review_engine.db
+
+# 5. Launch the dashboard
+streamlit run app.py
+```
+
+> 💡 The repository already includes `cleaned_reviews.csv` and `review_engine.db`, so you can skip straight to step 5 to explore the dashboard.
+
+---
+
+## 📁 Project structure
+
+```
 review-intelligence-engine/
-├── app.py               # Interactive Streamlit BI dashboard
-├── fetch_reviews.py     # Data ingestion script
-├── clean_and_tag.py     # Cleaning, VADER sentiment & root-cause tagging
-├── analyze_data.py      # SQLite loading & analytical queries
-├── raw_reviews.csv      # Raw ingested reviews dataset
-├── clean_reviews.csv    # Cleaned & tagged reviews dataset
-├── review_engine.db     # SQLite database
-├── requirements.txt     # Python dependencies
-└── README.md            # Project documentation
+├── fetch_reviews.py       # Ingestion: collect reviews
+├── clean_and_tag.py       # Cleaning, VADER sentiment, root-cause tagging
+├── analyze_data.py        # SQLite loading and SQL analysis
+├── app.py                 # Streamlit + Plotly dashboard
+├── raw_reviews.csv        # Raw collected reviews
+├── cleaned_reviews.csv    # Cleaned and tagged reviews
+├── review_engine.db       # SQLite database
+├── requirements.txt       # Python dependencies
+└── README.md
 ```
 
-## How to Run Locally
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/](https://github.com/)<your-username>/review-intelligence-engine.git
-   cd review-intelligence-engine
-   ```
+---
 
-2. **Create and activate a virtual environment**
-   ```bash
-   python -m venv venv
-   # Windows (PowerShell)
-   .\venv\Scripts\Activate.ps1
-   # macOS / Linux
-   source venv/bin/activate
-   ```
+## 🔭 Possible next steps
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+- Add screenshots or a short GIF of the dashboard to this README
+- Extend root-cause tagging beyond keyword rules, for example with a trained text classifier
+- Add evaluation metrics for the tagging step against a hand-labelled sample
 
-4. **Run the pipeline scripts (if rebuilding the database)**
-   ```bash
-   python fetch_reviews.py
-   python clean_and_tag.py
-   python analyze_data.py
-   ```
+---
 
-5. **Start the Streamlit dashboard**
-   ```bash
-   streamlit run app.py
-   ```
+## 👩‍💻 Author
 
-## Resume Highlights
-* Engineered an end-to-end NLP and BI pipeline in Python to ingest, clean, and analyze 4,300+ Google Play Store reviews with VADER sentiment analysis and root-cause tagging.
-* Stored structured review data in SQLite and wrote SQL queries to evaluate rating distributions, complaint drivers, and high-churn risk feedback.
-* Built an interactive Streamlit and Plotly dashboard featuring multi-facet sidebar filters, keyword search, sentiment trend tracking, and CSV export.
+**Akshaya Nimma** · B.Sc. Computer Science and Machine Learning
+
+[![GitHub](https://img.shields.io/badge/GitHub-akshayanimma-181717?style=flat-square&logo=github)](https://github.com/akshayanimma)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-akshayanimma-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/akshayanimma)
+
+If you found this project useful, consider giving it a ⭐
+
+
+
+
+   
